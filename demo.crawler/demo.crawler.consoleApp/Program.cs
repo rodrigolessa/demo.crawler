@@ -2,15 +2,51 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using SimpleBrowser;
 
 namespace demo.crawler.consoleApp
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
+        {
+            // Test HttpClient - C# HTTP GET request synchronous example
+            GetPlaceHolderOnHttpClient();
+
+            // Test SimpleBrowser
+            GetSeriesOnSimpleBrowser();
+        }
+
+        #region HttpClient Demo - API for tests
+
+        static void GetPlaceHolderOnHttpClient()
+        {
+            using (var client = new HttpClient())
+            {
+                var url = "https://jsonplaceholder.typicode.com/posts/1";
+                var response = client.GetAsync(url).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // by calling .Result you are performing a synchronous call
+                    var responseContent = response.Content;
+
+                    // by calling .Result you are synchronously reading the result
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+
+                    Console.WriteLine(responseString);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Simple Browser Demo - Search for series on calendar 
+
+        static void GetSeriesOnSimpleBrowser()
         {
             var browser = new Browser();
             try
@@ -63,31 +99,31 @@ namespace demo.crawler.consoleApp
                 //    loginLink.Click();
                 //    if (LastRequestFailed(browser)) return;
 
-                    //    // fill in the form and click the login button - the fields are easy to locate because they have ID attributes
-                    //    browser.Find("login_field").Value = "youremail@domain.com";
-                    //    browser.Find("password").Value = "yourpassword";
-                    //    browser.Find(ElementType.Button, "name", "commit").Click();
-                    //    if (LastRequestFailed(browser)) return;
+                //    // fill in the form and click the login button - the fields are easy to locate because they have ID attributes
+                //    browser.Find("login_field").Value = "youremail@domain.com";
+                //    browser.Find("password").Value = "yourpassword";
+                //    browser.Find(ElementType.Button, "name", "commit").Click();
+                //    if (LastRequestFailed(browser)) return;
 
-                    //    // see if the login succeeded - ContainsText() is very forgiving, so don't worry about whitespace, casing, html tags separating the text, etc.
-                    //    if (browser.ContainsText("Incorrect login or password"))
-                    //    {
-                    //        browser.Log("Login failed!", LogMessageType.Error);
-                    //    }
-                    //    else
-                    //    {
-                    //        // After logging in, we should check that the page contains elements that we recognise
-                    //        if (!browser.ContainsText("Your Repositories"))
-                    //            browser.Log("There wasn't the usual login failure message, but the text we normally expect isn't present on the page");
-                    //        else
-                    //        {
-                    //            browser.Log("Your News Feed:");
-                    //            // we can use simple jquery selectors, though advanced selectors are yet to be implemented
-                    //            foreach (var item in browser.Select("div.news .title"))
-                    //                browser.Log("* " + item.Value);
-                    //        }
-                    //    }
-                    //}
+                //    // see if the login succeeded - ContainsText() is very forgiving, so don't worry about whitespace, casing, html tags separating the text, etc.
+                //    if (browser.ContainsText("Incorrect login or password"))
+                //    {
+                //        browser.Log("Login failed!", LogMessageType.Error);
+                //    }
+                //    else
+                //    {
+                //        // After logging in, we should check that the page contains elements that we recognise
+                //        if (!browser.ContainsText("Your Repositories"))
+                //            browser.Log("There wasn't the usual login failure message, but the text we normally expect isn't present on the page");
+                //        else
+                //        {
+                //            browser.Log("Your News Feed:");
+                //            // we can use simple jquery selectors, though advanced selectors are yet to be implemented
+                //            foreach (var item in browser.Select("div.news .title"))
+                //                browser.Log("* " + item.Value);
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -132,5 +168,7 @@ namespace demo.crawler.consoleApp
             File.WriteAllText(path, text);
             return path;
         }
+
+        #endregion
     }
 }
